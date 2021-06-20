@@ -2,11 +2,11 @@ from files import get_all_files
 from organizer import organize_files
 
 
-INPUT_DIR = 'D:/else/DELL/Desktop/else/Haram Image organizer/image-organizer/test/Haram'
-OUT_DIR = 'D:/else/DELL/Desktop/else/Haram Image organizer/image-organizer/test/Haram organized'
+INPUT_DIR = ''
+OUT_DIR = ''
 
 ALLOWED_EXTENSIONS = ['.jpg', '.png', '.mp4']
-COPY_FILES = False                  # If false then files will be move
+COPY_FILES = True                  # If false then files will be move
 USE_FILE_NAME_TO_ORGANIZE = True    # If false then OS attributes will be used
 
 
