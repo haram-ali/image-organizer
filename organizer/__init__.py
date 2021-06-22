@@ -2,7 +2,9 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-from files import get_all_files
+import json
+
+from files import get_all_files, write_to_file
 from organizer import organize_files
 
 
@@ -19,11 +21,27 @@ files = get_all_files(
     INPUT_DIR,
     extensions=ALLOWED_EXTENSIONS
 )
+print(f'{len(files)} files found.')
 
 # Organizing files
-organize_files(
+files_with_err = organize_files(
     files,
     OUT_DIR,
     copy_files=COPY_FILES,
     use_file_name_to_organize=USE_FILE_NAME_TO_ORGANIZE
 )
+
+print(f"""
+Files with error in {'copying' if COPY_FILES else 'moving'}.
+
+    Existing files : {len(files_with_err['exists'])}
+    Invalid path   : {len(files_with_err['invalid_path'])}
+    Other errors   : {len(files_with_err['other'])}
+    ----------------------
+    Total          : {len(files_with_err['exists'])+len(files_with_err['invalid_path'])+len(files_with_err['other'])}
+
+Additional information is stored to {'file.txt'}
+"""
+)
+
+write_to_file('error-log.txt', json.dumps(files_with_err, indent=2))
