@@ -33,7 +33,7 @@ def get_files_in_curr_dir(path, extensions):
 
 def move_file(from_path, to_path):
     try:
-        if chk_file(from_path):
+        if chk_file(to_path):
             raise FileExistsError
 
         mk_dir(get_file_path(to_path))
@@ -48,7 +48,7 @@ def move_file(from_path, to_path):
 
 def copy_file(from_path, to_path):
     try:
-        if chk_file(from_path):
+        if chk_file(to_path):
             raise FileExistsError
 
         mk_dir(get_file_path(to_path))
