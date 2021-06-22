@@ -1,6 +1,6 @@
 from os import listdir, rename, makedirs
 
-from os.path import isfile, isdir, dirname, splitext
+from os.path import isfile, isdir, dirname, splitext, exists
 from os.path import basename as filename
 from os.path import join as join_path
 from os.path import exists as path_exists
@@ -32,15 +32,33 @@ def get_files_in_curr_dir(path, extensions):
 
 
 def move_file(from_path, to_path):
-    # TODO: What if file moving failed
-    mk_dir(get_file_path(to_path))
-    rename(from_path, to_path)
+    try:
+        if chk_file(from_path):
+            raise FileExistsError
+
+        mk_dir(get_file_path(to_path))
+        rename(from_path, to_path)
+    except FileExistsError:
+        return FileExistsError
+    except FileNotFoundError:
+        return FileNotFoundError
+    except:
+        return Exception
 
 
-def copy_file(form_path, to_path):
-    # TODO: What if file moving failed
-    mk_dir(get_file_path(to_path))
-    copyfile(form_path, to_path)
+def copy_file(from_path, to_path):
+    try:
+        if chk_file(from_path):
+            raise FileExistsError
+
+        mk_dir(get_file_path(to_path))
+        copyfile(from_path, to_path)
+    except FileExistsError:
+        return FileExistsError
+    except FileNotFoundError:
+        return FileNotFoundError
+    except:
+        return Exception
 
 
 """
@@ -70,7 +88,8 @@ def get_all_files(searching_dir_path, relative_path=False, extensions=None):
             files += get_all_files_inner(f'{path}/{dir}', extensions)
 
         curr_dir_files = get_files_in_curr_dir(path, extensions)
-        files += put_relative_path_to_files(curr_dir_files, path, searching_dir_path)
+        files += put_relative_path_to_files(curr_dir_files,
+                                            path, searching_dir_path)
         return files
 
     files = get_all_files_inner(searching_dir_path, extensions)
@@ -83,6 +102,15 @@ def get_all_files(searching_dir_path, relative_path=False, extensions=None):
 """
     Utilities
 """
+
+
+def write_to_file(file, content):
+    with open(file, 'w') as file:
+        file.write(content)
+
+
+def chk_file(path):
+    return exists(path)
 
 
 def get_file_path(file):
