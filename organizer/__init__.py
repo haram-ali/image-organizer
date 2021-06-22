@@ -6,8 +6,6 @@ from files import get_all_files
 from organizer import organize_files
 
 
-
-
 INPUT_DIR = ''
 OUT_DIR = ''
 
