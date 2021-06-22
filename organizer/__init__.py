@@ -2,10 +2,10 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-import json
-
 from private_constants import INPUT_DIR, OUT_DIR
+from files import get_all_files
 from organize import organize_files
+from utilities import show_stats
 
 
 ALLOWED_EXTENSIONS = ['.jpg', '.png', '.mp4']
@@ -28,17 +28,4 @@ files_with_err = organize_files(
     use_file_name_to_organize=USE_FILE_NAME_TO_ORGANIZE
 )
 
-print(f"""
-Files with error in {'copying' if COPY_FILES else 'moving'}.
-
-    Existing files : {len(files_with_err['exists'])}
-    Invalid path   : {len(files_with_err['invalid_path'])}
-    Other errors   : {len(files_with_err['other'])}
-    ----------------------
-    Total          : {len(files_with_err['exists'])+len(files_with_err['invalid_path'])+len(files_with_err['other'])}
-
-Additional information is stored to {'file.txt'}
-"""
-)
-
-write_to_file('error-log.txt', json.dumps(files_with_err, indent=2))
+show_stats(files_with_err)

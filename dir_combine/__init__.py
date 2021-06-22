@@ -6,6 +6,7 @@ import json
 
 from private_constants import INPUT_DIRS, OUT_DIR
 from combine import combine
+from utilities import show_stats
 from files import get_all_files, write_to_file
 
 
@@ -25,17 +26,4 @@ files_with_err = combine(
     copy_files=COPY_FILES
 )
 
-print(f"""
-Files with error in {'copying' if COPY_FILES else 'moving'}.
-
-    Existing files : {len(files_with_err['exists'])}
-    Invalid path   : {len(files_with_err['invalid_path'])}
-    Other errors   : {len(files_with_err['other'])}
-    ----------------------
-    Total          : {len(files_with_err['exists'])+len(files_with_err['invalid_path'])+len(files_with_err['other'])}
-
-Additional information is stored to {'file.txt'}
-"""
-)
-
-write_to_file('error-log.txt', json.dumps(files_with_err, indent=2))
+show_stats(files_with_err)
