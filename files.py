@@ -48,29 +48,36 @@ def copy_file(form_path, to_path):
 """
 
 
-def get_all_files(path, extensions=None):
+def get_all_files(searching_dir_path, relative_path=False, extensions=None):
     """
     Returns all the files in current directory & all subdirectories.
 
     Parameters:
     ----------
-    path (str):
+    searching_dir_path (str):
         Full path to directory
+    relative_path (Boolean): optional
+        If true the files path will not include path to searching directory
     extensions: optional
         List of extensions to filter files.
     """
 
     def get_all_files_inner(path, extensions):
         files = []
+        nonlocal searching_dir_path
 
         for dir in get_dirs_in_curr_dir(path):
             files += get_all_files_inner(f'{path}/{dir}', extensions)
 
-        files += put_path_to_files(get_files_in_curr_dir(path,
-                                   extensions), path)
+        curr_dir_files = get_files_in_curr_dir(path, extensions)
+        files += put_relative_path_to_files(curr_dir_files, path, searching_dir_path)
         return files
 
-    return get_all_files_inner(path, extensions)
+    files = get_all_files_inner(searching_dir_path, extensions)
+    if relative_path:
+        return files
+
+    return put_path_to_files(files, searching_dir_path)
 
 
 """
@@ -97,3 +104,7 @@ def mk_dir(path):
 
 def put_path_to_files(files, path):
     return [f'{path}/{f}' for f in files]
+
+
+def put_relative_path_to_files(files, path, path_to_dir):
+    return [f'{path.replace(path_to_dir, "")}/{file}' for file in files]
