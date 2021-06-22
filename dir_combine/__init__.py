@@ -2,15 +2,10 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
+from private_constants import INPUT_DIRS, OUT_DIR
 from combine import combine
 from files import get_all_files
 
-
-INPUT_DIRS = [
-    '',
-    ''
-]
-OUT_DIR = ''
 
 COPY_FILES = True                   # If false then files will be move
 

@@ -4,12 +4,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 import json
 
+from private_constants import INPUT_DIR, OUT_DIR
 from files import get_all_files, write_to_file
 from organizer import organize_files
 
-
-INPUT_DIR = ''
-OUT_DIR = ''
 
 ALLOWED_EXTENSIONS = ['.jpg', '.png', '.mp4']
 COPY_FILES = True                   # If false then files will be move
