@@ -3,6 +3,6 @@ __pycache__
 
 /test
 test.py
-error-log.txt
+log.json
 
 /private_constants.py

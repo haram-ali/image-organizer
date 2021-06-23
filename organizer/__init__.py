@@ -21,11 +21,11 @@ files = get_all_files(
 print(f'{len(files)} files found.')
 
 # Organizing files
-files_with_err = organize_files(
+files_status = organize_files(
     files,
     OUT_DIR,
     copy_files=COPY_FILES,
     use_file_name_to_organize=USE_FILE_NAME_TO_ORGANIZE
 )
 
-show_stats(files_with_err)
+show_stats(files_status)

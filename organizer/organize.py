@@ -9,11 +9,15 @@ def organize_files(
     copy_files=True,
     use_file_name_to_organize=True
 ):
-    files_with_err = {
-        'exists': [],
-        'invalid_path': [],
-        'other': []
+    files_status = {
+        'error': {
+            'exists': [],
+            'invalid_path': [],
+            'other': []
+        },
+        'success': []
     }
+    err_files = files_status['error']
 
     move_or_copy = copy_file if copy_files else move_file
 
@@ -31,13 +35,15 @@ def organize_files(
         err = move_or_copy(file_curr_path, file_new_path)
 
         if err is FileExistsError:
-            files_with_err['exists'].append(file_curr_path)
+            err_files['exists'].append(file_curr_path)
         elif err is FileNotFoundError:
-            files_with_err['invalid_path'].append(file_curr_path)
+            err_files['invalid_path'].append(file_curr_path)
         elif err is not None:
-            files_with_err['other'].append(file_curr_path)
+            err_files['other'].append(file_curr_path)
+        else:
+            files_status['success'].append(file_curr_path)
 
-    return files_with_err
+    return files_status
 
 
 def get_date_from_file_name(file_name):

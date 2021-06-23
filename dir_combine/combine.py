@@ -2,31 +2,41 @@ from files import move_file, copy_file
 
 
 def combine(files, out_dir, copy_files=True):
-    total_files_with_err = {
-        'exists': [],
-        'invalid_path': [],
-        'other': []
+    all_files_status = {
+        'error': {
+            'exists': [],
+            'invalid_path': [],
+            'other': []
+        },
+        'success': []
     }
+    err_files = all_files_status['error']
 
     for a in files:
-        files_with_err = move_files_from_dir(a['files'], a['input_dir'], out_dir, copy_file)
+        files_status = move_files_from_dir(a['files'], a['input_dir'], out_dir, copy_files)
 
-        total_files_with_err['exists'] += files_with_err['exists']
-        total_files_with_err['invalid_path'] += files_with_err['invalid_path']
-        total_files_with_err['other'] += files_with_err['other']
+        err_files['exists'] += files_status['error']['exists']
+        err_files['invalid_path'] += files_status['error']['invalid_path']
+        err_files['other'] += files_status['error']['other']
 
-    return total_files_with_err
+        all_files_status['success'] += files_status['success']
+
+    return all_files_status
 
 
 def move_files_from_dir(files, input_dir, out_dir, copy_files):
-    files_with_err = {
-        'exists': [],
-        'invalid_path': [],
-        'other': []
+    files_status = {
+        'error': {
+            'exists': [],
+            'invalid_path': [],
+            'other': []
+        },
+        'success': []
     }
-    
+    err_files = files_status['error']
+
     move_or_copy = copy_file if copy_files else move_file
-    
+
     for file_relative_path in files:
         curr_path = f'{input_dir}/{file_relative_path}'
         new_path = f'{out_dir}/{file_relative_path}'
@@ -34,10 +44,12 @@ def move_files_from_dir(files, input_dir, out_dir, copy_files):
         err = move_or_copy(curr_path, new_path)
 
         if err is FileExistsError:
-            files_with_err['exists'].append(curr_path)
+            err_files['exists'].append(curr_path)
         elif err is FileNotFoundError:
-            files_with_err['invalid_path'].append(curr_path)
+            err_files['invalid_path'].append(curr_path)
         elif err is not None:
-            files_with_err['other'].append(curr_path)
+            err_files['other'].append(curr_path)
+        else:
+            files_status['success'].append(curr_path)
 
-    return files_with_err
+    return files_status

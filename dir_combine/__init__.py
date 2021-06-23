@@ -20,10 +20,10 @@ for input_dir in INPUT_DIRS:
         'files': get_all_files(input_dir, relative_path=True)
     })
 
-files_with_err = combine(
+files_status = combine(
     files,
     OUT_DIR,
     copy_files=COPY_FILES
 )
 
-show_stats(files_with_err)
+show_stats(files_status)
