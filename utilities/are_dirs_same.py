@@ -11,14 +11,14 @@ from private_constants import INPUT_DIRS
 from files import get_all_files
 
 
-files_by_dir = []
+filesByDir = []
 for input_dir in INPUT_DIRS:
-    files_by_dir.append(get_all_files(input_dir, relative_path=True))
+    filesByDir.append(get_all_files(input_dir, relative_path=True))
 
-all_dirs_are_same = True
-for dir_files in files_by_dir:
-    if dir_files != files_by_dir[0]:
-        all_dirs_are_same = False
+allDirsAreSame = True
+for dir_files in filesByDir:
+    if dir_files != filesByDir[0]:
+        allDirsAreSame = False
         break
 
-print(f'Dirs are {"same" if all_dirs_are_same else "not same"}.')
+print(f'Dirs are {"same" if allDirsAreSame else "not same"}.')

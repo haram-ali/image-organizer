@@ -1,8 +1,8 @@
 from files import move_file, copy_file
 
 
-def combine(files, out_dir, copy_files=True):
-    all_files_status = {
+def combine(files, outDir, copyFiles=True):
+    allFilesStatus = {
         'error': {
             'exists': [],
             'invalid_path': [],
@@ -10,22 +10,22 @@ def combine(files, out_dir, copy_files=True):
         },
         'success': []
     }
-    err_files = all_files_status['error']
+    errFiles = allFilesStatus['error']
 
-    for a in files:
-        files_status = move_files_from_dir(a['files'], a['input_dir'], out_dir, copy_files)
+    for dirFiles in files:
+        files_status = move_files_from_dir(dirFiles['files'], dirFiles['input_dir'], outDir, copyFiles)
 
-        err_files['exists'] += files_status['error']['exists']
-        err_files['invalid_path'] += files_status['error']['invalid_path']
-        err_files['other'] += files_status['error']['other']
+        errFiles['exists'] += files_status['error']['exists']
+        errFiles['invalid_path'] += files_status['error']['invalid_path']
+        errFiles['other'] += files_status['error']['other']
 
-        all_files_status['success'] += files_status['success']
+        allFilesStatus['success'] += files_status['success']
 
-    return all_files_status
+    return allFilesStatus
 
 
-def move_files_from_dir(files, input_dir, out_dir, copy_files):
-    files_status = {
+def move_files_from_dir(files, inputDir, outDir, copyFiles):
+    filesStatus = {
         'error': {
             'exists': [],
             'invalid_path': [],
@@ -33,23 +33,23 @@ def move_files_from_dir(files, input_dir, out_dir, copy_files):
         },
         'success': []
     }
-    err_files = files_status['error']
+    errFiles = filesStatus['error']
 
-    move_or_copy = copy_file if copy_files else move_file
+    move_or_copy = copy_file if copyFiles else move_file
 
-    for file_relative_path in files:
-        curr_path = f'{input_dir}/{file_relative_path}'
-        new_path = f'{out_dir}/{file_relative_path}'
+    for fileRelativePath in files:
+        currPath = f'{inputDir}/{fileRelativePath}'
+        newPath = f'{outDir}/{fileRelativePath}'
 
-        err = move_or_copy(curr_path, new_path)
+        err = move_or_copy(currPath, newPath)
 
         if err is FileExistsError:
-            err_files['exists'].append(curr_path)
+            errFiles['exists'].append(currPath)
         elif err is FileNotFoundError:
-            err_files['invalid_path'].append(curr_path)
+            errFiles['invalid_path'].append(currPath)
         elif err is not None:
-            err_files['other'].append(curr_path)
+            errFiles['other'].append(currPath)
         else:
-            files_status['success'].append(curr_path)
+            filesStatus['success'].append(currPath)
 
-    return files_status
+    return filesStatus

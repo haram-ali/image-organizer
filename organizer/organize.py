@@ -5,11 +5,11 @@ from files import move_file, copy_file, get_file_name
 
 def organize_files(
     files,
-    out_dir,
-    copy_files=True,
-    use_file_name_to_organize=True
+    outDir,
+    copyFiles=True,
+    useFileNameToOrganize=True
 ):
-    files_status = {
+    filesStatus = {
         'error': {
             'exists': [],
             'invalid_path': [],
@@ -17,51 +17,52 @@ def organize_files(
         },
         'success': []
     }
-    err_files = files_status['error']
+    errFiles = filesStatus['error']
 
-    move_or_copy = copy_file if copy_files else move_file
+    move_or_copy = copy_file if copyFiles else move_file
+    get_file_date = get_date_from_file_name if useFileNameToOrganize else get_date_from_os_attributes
 
-    for file_curr_path in files:
-        file_name = get_file_name(file_curr_path)
+    for fileCurrPath in files:
+        fileName = get_file_name(fileCurrPath)
+        fileDate = get_file_date(fileName)
 
-        file_date = None
-        if use_file_name_to_organize:
-            file_date = get_date_from_file_name(file_name)
-        else:
-            file_date = get_date_from_os_attributes(file_name)
+        fileNewPath = f'{outDir}/{fileDate.strftime(r"%Y/%m%B/%d")}/{fileName}'
 
-        file_new_path = f'{out_dir}/{file_date.strftime(r"%Y/%m%B/%d")}/{file_name}'
-
-        err = move_or_copy(file_curr_path, file_new_path)
+        err = move_or_copy(fileCurrPath, fileNewPath)
 
         if err is FileExistsError:
-            err_files['exists'].append(file_curr_path)
+            errFiles['exists'].append(fileCurrPath)
         elif err is FileNotFoundError:
-            err_files['invalid_path'].append(file_curr_path)
+            errFiles['invalid_path'].append(fileCurrPath)
         elif err is not None:
-            err_files['other'].append(file_curr_path)
+            errFiles['other'].append(fileCurrPath)
         else:
-            files_status['success'].append(file_curr_path)
+            filesStatus['success'].append(fileCurrPath)
 
-    return files_status
+    return filesStatus
 
 
-def get_date_from_file_name(file_name):
+def get_date_from_file_name(fileName):
     # Example file names:
     #   IMG-20210105-WA0036.jpg
+    #   Screenshot_20210622_210602_com.whatsapp.jpg
 
     #   VID_20210207_205658.mp4
     #   VID-20210613-WA0039.mp4
 
-    date_str = file_name[4:12]  # 20210105
+    dateStr = None
+    if 'Screenshot' in fileName:
+        dateStr = fileName[11:19]   # 20210105
+    else:
+        dateStr = fileName[4:12]    # 20210105
 
-    year = int(date_str[0:4])   # 2021
-    month = int(date_str[4:6])  # 01
-    day = int(date_str[6:])     # 05
+    year = int(dateStr[0:4])   # 2021
+    month = int(dateStr[4:6])  # 01
+    day = int(dateStr[6:])     # 05
 
     return datetime(year, month, day)
 
 
-def get_date_from_os_attributes(file_name):
+def get_date_from_os_attributes(fileName):
     # TODO: Have to implement it
     pass
