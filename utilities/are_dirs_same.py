@@ -13,7 +13,7 @@ from files import get_all_files
 
 filesByDir = []
 for input_dir in INPUT_DIRS:
-    filesByDir.append(get_all_files(input_dir, relative_path=True))
+    filesByDir.append(get_all_files(input_dir, relativePath=True))
 
 allDirsAreSame = True
 for dir_files in filesByDir:

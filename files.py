@@ -31,13 +31,13 @@ def get_files_in_curr_dir(path, extensions):
 """
 
 
-def move_file(from_path, to_path):
+def move_file(fromPath, toPath):
     try:
-        if chk_file(to_path):
+        if chk_file(toPath):
             raise FileExistsError
 
-        mk_dir(get_file_path(to_path))
-        rename(from_path, to_path)
+        mk_dir(get_file_path(toPath))
+        rename(fromPath, toPath)
     except FileExistsError:
         return FileExistsError
     except FileNotFoundError:
@@ -46,13 +46,13 @@ def move_file(from_path, to_path):
         return Exception
 
 
-def copy_file(from_path, to_path):
+def copy_file(fromPath, toPath):
     try:
-        if chk_file(to_path):
+        if chk_file(toPath):
             raise FileExistsError
 
-        mk_dir(get_file_path(to_path))
-        copyfile(from_path, to_path)
+        mk_dir(get_file_path(toPath))
+        copyfile(fromPath, toPath)
     except FileExistsError:
         return FileExistsError
     except FileNotFoundError:
@@ -66,7 +66,7 @@ def copy_file(from_path, to_path):
 """
 
 
-def get_all_files(searching_dir_path, relative_path=False, extensions=None):
+def get_all_files(searchingDirPath, relativePath=False, extensions=None):
     """
     Returns all the files in current directory & all subdirectories.
 
@@ -74,7 +74,7 @@ def get_all_files(searching_dir_path, relative_path=False, extensions=None):
     ----------
     searching_dir_path (str):
         Full path to directory
-    relative_path (Boolean): optional
+    relativePath (Boolean): optional
         If true the files path will not include path to searching directory
     extensions: optional
         List of extensions to filter files.
@@ -82,21 +82,21 @@ def get_all_files(searching_dir_path, relative_path=False, extensions=None):
 
     def get_all_files_inner(path, extensions):
         files = []
-        nonlocal searching_dir_path
+        nonlocal searchingDirPath
 
         for dir in get_dirs_in_curr_dir(path):
             files += get_all_files_inner(f'{path}/{dir}', extensions)
 
         curr_dir_files = get_files_in_curr_dir(path, extensions)
         files += put_relative_path_to_files(curr_dir_files,
-                                            path, searching_dir_path)
+                                            path, searchingDirPath)
         return files
 
-    files = get_all_files_inner(searching_dir_path, extensions)
-    if relative_path:
+    files = get_all_files_inner(searchingDirPath, extensions)
+    if relativePath:
         return files
 
-    return put_path_to_files(files, searching_dir_path)
+    return put_path_to_files(files, searchingDirPath)
 
 
 """
@@ -134,5 +134,5 @@ def put_path_to_files(files, path):
     return [f'{path}/{f}' for f in files]
 
 
-def put_relative_path_to_files(files, path, path_to_dir):
-    return [f'{path.replace(path_to_dir, "")}/{file}' for file in files]
+def put_relative_path_to_files(files, path, pathToDir):
+    return [f'{path.replace(pathToDir, "")}/{file}' for file in files]

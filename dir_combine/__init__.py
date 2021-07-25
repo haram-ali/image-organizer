@@ -15,7 +15,7 @@ files = []
 for inputDir in INPUT_DIRS:
     files.append({
         'input_dir': inputDir,
-        'files': get_all_files(inputDir, relative_path=True)
+        'files': get_all_files(inputDir, relativePath=True)
     })
 
 files_status = combine(
