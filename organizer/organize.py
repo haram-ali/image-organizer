@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from files import move_file, copy_file, get_file_name
+from files import move_file, copy_file, get_file_name, get_file_path
 
 
 def organize_files(
@@ -23,14 +23,22 @@ def organize_files(
 
     move_or_copy = copy_file if copyFiles else move_file
     get_file_date = get_date_from_file_name if useFileNameToOrganize else get_date_from_os_attributes
+    def get_file_new_path(fileDate, fileRelativePath):
+        fileName = get_file_name(fileRelativePath)
+        fileRelativeOnlyPath = get_file_path(fileRelativePath)
+
+        if keepSubDirSutructureInsideDateDirs:
+            return f'{outDir}/{fileDate.strftime(r"%Y/%m%B/%d")}/{fileRelativeOnlyPath}/{fileName}'
+        else:
+            return f'{outDir}/{fileDate.strftime(r"%Y/%m%B/%d")}/{fileName}'
 
     for fileRelativePath in filesRelativePath:
         fileName = get_file_name(fileRelativePath)
         fileDate = get_file_date(fileName)
 
         fileCurrPath = f'{inputDir}/{fileRelativePath}'
-        fileNewPath = f'{outDir}/{fileDate.strftime(r"%Y/%m%B/%d")}/{fileName}'
-        print(fileRelativePath)
+        fileNewPath = get_file_new_path(fileDate, fileRelativePath)
+
         err = move_or_copy(fileCurrPath, fileNewPath)
 
         if err is FileExistsError:
