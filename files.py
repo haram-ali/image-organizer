@@ -18,7 +18,7 @@ def get_dirs_in_curr_dir(path):
     return [f for f in listdir(path) if isdir(join_path(path, f))]
 
 
-def get_files_in_curr_dir(path, extensions):
+def get_files_in_curr_dir(path, extensions=None):
     all_files = [f for f in listdir(path) if isfile(join_path(path, f))]
 
     if extensions:
