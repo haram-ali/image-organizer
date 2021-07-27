@@ -1,4 +1,5 @@
 import json
+import tempfile
 
 from files import writeToFile
 
@@ -17,6 +18,8 @@ def showStats(filesStatus):
         print('All files files copied/moved successfully.')
         return
 
+    logFilePath = tempfile.NamedTemporaryFile(suffix='.json', delete=False).name
+
     print(f"""
 Successfully copied/moved files : {totalSuccessFiles}
 
@@ -28,11 +31,11 @@ Files with error.
     ----------------------
     Total          : {totalErrFiles}
 
-Additional information is stored to {'log.txt'}
-    """
-)
+Additional information is stored to {logFilePath}
+"""
+          )
 
     writeToFile(
-        'log.json',
+        logFilePath,
         json.dumps(filesStatus, indent=2)
     )
