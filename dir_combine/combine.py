@@ -5,7 +5,7 @@ def combine(files, outDir, copyFiles=True):
     allFilesStatus = {
         'error': {
             'exists': [],
-            'invalid_path': [],
+            'invalidPath': [],
             'other': []
         },
         'success': []
@@ -16,7 +16,7 @@ def combine(files, outDir, copyFiles=True):
         filesStatus = moveFilesFromDir(dirFiles['files'], dirFiles['input_dir'], outDir, copyFiles)
 
         errFiles['exists'] += filesStatus['error']['exists']
-        errFiles['invalid_path'] += filesStatus['error']['invalid_path']
+        errFiles['invalidPath'] += filesStatus['error']['invalidPath']
         errFiles['other'] += filesStatus['error']['other']
 
         allFilesStatus['success'] += filesStatus['success']
@@ -28,7 +28,7 @@ def moveFilesFromDir(files, inputDir, outDir, copyFiles):
     filesStatus = {
         'error': {
             'exists': [],
-            'invalid_path': [],
+            'invalidPath': [],
             'other': []
         },
         'success': []
@@ -46,7 +46,7 @@ def moveFilesFromDir(files, inputDir, outDir, copyFiles):
         if err is FileExistsError:
             errFiles['exists'].append(currPath)
         elif err is FileNotFoundError:
-            errFiles['invalid_path'].append(currPath)
+            errFiles['invalidPath'].append(currPath)
         elif err is not None:
             errFiles['other'].append(currPath)
         else:
