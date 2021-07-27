@@ -14,7 +14,7 @@ def organizeFiles(
     filesStatus = {
         'error': {
             'exists': [],
-            'invalid_path': [],
+            'invalidPath': [],
             'other': []
         },
         'success': []
@@ -22,8 +22,28 @@ def organizeFiles(
     errFiles = filesStatus['error']
 
     moveOrCopy = copyFile if copyFiles else moveFile
-    getFileDate = getDateFromFileName if useFileNameToOrganize else getDateFromOsAttributes
-    def getFileNewPath(fileDate, fileRelativePath):
+
+    for fileRelativePath in filesRelativePath:
+        fileDate = getFileDate(fileRelativePath, useFileNameToOrganize)
+
+        fileCurrPath = f'{inputDir}/{fileRelativePath}'
+        fileNewPath = getFileNewPath(fileDate, fileRelativePath, outDir, keepSubDirSutructureInsideDateDirs)
+
+        err = moveOrCopy(fileCurrPath, fileNewPath)
+
+        if err is FileExistsError:
+            errFiles['exists'].append(fileCurrPath)
+        elif err is FileNotFoundError:
+            errFiles['invalidPath'].append(fileCurrPath)
+        elif err is not None:
+            errFiles['other'].append(fileCurrPath)
+        else:
+            filesStatus['success'].append(fileCurrPath)
+
+    return filesStatus
+
+
+def getFileNewPath(fileDate, fileRelativePath, outDir, keepSubDirSutructureInsideDateDirs):
         fileName = getFileName(fileRelativePath)
         fileRelativeOnlyPath = getFilePath(fileRelativePath)
 
@@ -32,25 +52,14 @@ def organizeFiles(
         else:
             return f'{outDir}/{fileDate.strftime(r"%Y/%m%B/%d")}/{fileName}'
 
-    for fileRelativePath in filesRelativePath:
-        fileName = getFileName(fileRelativePath)
-        fileDate = getFileDate(fileName)
 
-        fileCurrPath = f'{inputDir}/{fileRelativePath}'
-        fileNewPath = getFileNewPath(fileDate, fileRelativePath)
+def getFileDate(file, useFileNameToOrganize):
+    fileName = getFileName(file)
 
-        err = moveOrCopy(fileCurrPath, fileNewPath)
-
-        if err is FileExistsError:
-            errFiles['exists'].append(fileCurrPath)
-        elif err is FileNotFoundError:
-            errFiles['invalid_path'].append(fileCurrPath)
-        elif err is not None:
-            errFiles['other'].append(fileCurrPath)
-        else:
-            filesStatus['success'].append(fileCurrPath)
-
-    return filesStatus
+    if useFileNameToOrganize:
+        return getDateFromFileName(fileName)
+    else:
+        return getDateFromOsAttributes(fileName)
 
 
 def getDateFromFileName(fileName):

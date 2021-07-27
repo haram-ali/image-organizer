@@ -7,7 +7,7 @@ def showStats(filesStatus):
     errFiles = filesStatus['error']
 
     errExisting = errFiles['exists']
-    errInvalidPath = errFiles['invalid_path']
+    errInvalidPath = errFiles['invalidPath']
     errOthers = errFiles['other']
 
     totalSuccessFiles = len(filesStatus['success'])
