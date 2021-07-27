@@ -4,10 +4,12 @@ from files import move_file, copy_file, get_file_name
 
 
 def organize_files(
-    files,
+    filesRelativePath,
+    inputDir,
     outDir,
     copyFiles=True,
-    useFileNameToOrganize=True
+    useFileNameToOrganize=True,
+    keepSubDirSutructureInsideDateDirs=False
 ):
     filesStatus = {
         'error': {
@@ -22,12 +24,13 @@ def organize_files(
     move_or_copy = copy_file if copyFiles else move_file
     get_file_date = get_date_from_file_name if useFileNameToOrganize else get_date_from_os_attributes
 
-    for fileCurrPath in files:
-        fileName = get_file_name(fileCurrPath)
+    for fileRelativePath in filesRelativePath:
+        fileName = get_file_name(fileRelativePath)
         fileDate = get_file_date(fileName)
 
+        fileCurrPath = f'{inputDir}/{fileRelativePath}'
         fileNewPath = f'{outDir}/{fileDate.strftime(r"%Y/%m%B/%d")}/{fileName}'
-
+        print(fileRelativePath)
         err = move_or_copy(fileCurrPath, fileNewPath)
 
         if err is FileExistsError:
