@@ -105,8 +105,8 @@ def getAllFiles(searchingDirPath, relativePath=False, extensions=None):
 
 
 def writeToFile(file, content):
-    with open(file, 'w') as file:
-        file.write(content)
+    with open(file, 'w') as f:
+        f.write(content)
 
 
 def chkFile(path):
