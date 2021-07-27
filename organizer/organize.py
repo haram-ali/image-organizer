@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from files import move_file, copy_file, get_file_name, get_file_path
+from files import moveFile, copyFile, getFileName, getFilePath
 
 
-def organize_files(
+def organizeFiles(
     filesRelativePath,
     inputDir,
     outDir,
@@ -21,11 +21,11 @@ def organize_files(
     }
     errFiles = filesStatus['error']
 
-    move_or_copy = copy_file if copyFiles else move_file
-    get_file_date = get_date_from_file_name if useFileNameToOrganize else get_date_from_os_attributes
-    def get_file_new_path(fileDate, fileRelativePath):
-        fileName = get_file_name(fileRelativePath)
-        fileRelativeOnlyPath = get_file_path(fileRelativePath)
+    moveOrCopy = copyFile if copyFiles else moveFile
+    getFileDate = getDateFromFileName if useFileNameToOrganize else getDateFromOsAttributes
+    def getFileNewPath(fileDate, fileRelativePath):
+        fileName = getFileName(fileRelativePath)
+        fileRelativeOnlyPath = getFilePath(fileRelativePath)
 
         if keepSubDirSutructureInsideDateDirs:
             return f'{outDir}/{fileDate.strftime(r"%Y/%m%B/%d")}/{fileRelativeOnlyPath}/{fileName}'
@@ -33,13 +33,13 @@ def organize_files(
             return f'{outDir}/{fileDate.strftime(r"%Y/%m%B/%d")}/{fileName}'
 
     for fileRelativePath in filesRelativePath:
-        fileName = get_file_name(fileRelativePath)
-        fileDate = get_file_date(fileName)
+        fileName = getFileName(fileRelativePath)
+        fileDate = getFileDate(fileName)
 
         fileCurrPath = f'{inputDir}/{fileRelativePath}'
-        fileNewPath = get_file_new_path(fileDate, fileRelativePath)
+        fileNewPath = getFileNewPath(fileDate, fileRelativePath)
 
-        err = move_or_copy(fileCurrPath, fileNewPath)
+        err = moveOrCopy(fileCurrPath, fileNewPath)
 
         if err is FileExistsError:
             errFiles['exists'].append(fileCurrPath)
@@ -53,7 +53,7 @@ def organize_files(
     return filesStatus
 
 
-def get_date_from_file_name(fileName):
+def getDateFromFileName(fileName):
     # Example file names:
     #   IMG-20210105-WA0036.jpg
     #   Screenshot_20210622_210602_com.whatsapp.jpg
@@ -74,6 +74,6 @@ def get_date_from_file_name(fileName):
     return datetime(year, month, day)
 
 
-def get_date_from_os_attributes(fileName):
+def getDateFromOsAttributes(fileName):
     # TODO: Have to implement it
     pass
