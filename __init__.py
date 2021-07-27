@@ -26,4 +26,4 @@ elif args.command == 'extensions':
 elif args.command == 'countfiles':
     countFiles()
 elif args.command == 'comparedirs':
-    combineDirs()
+    compareDirs()
