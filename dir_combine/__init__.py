@@ -1,6 +1,6 @@
 from private_constants import INPUT_DIRS, OUT_DIR
 from .combine import combine
-from utilities import showStats
+from stats import showStats
 from files import getAllFiles, writeToFile
 
 

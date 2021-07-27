@@ -1,7 +1,7 @@
 from private_constants import INPUT_DIR, OUT_DIR
 from files import getAllFiles
 from .organize import organizeFiles
-from utilities import showStats
+from stats import showStats
 
 
 ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.mp4']
