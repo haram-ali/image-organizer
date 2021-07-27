@@ -1,4 +1,4 @@
-from files import move_file, copy_file
+from files import moveFile, copyFile
 
 
 def combine(files, outDir, copyFiles=True):
@@ -13,18 +13,18 @@ def combine(files, outDir, copyFiles=True):
     errFiles = allFilesStatus['error']
 
     for dirFiles in files:
-        files_status = move_files_from_dir(dirFiles['files'], dirFiles['input_dir'], outDir, copyFiles)
+        filesStatus = moveFilesFromDir(dirFiles['files'], dirFiles['input_dir'], outDir, copyFiles)
 
-        errFiles['exists'] += files_status['error']['exists']
-        errFiles['invalid_path'] += files_status['error']['invalid_path']
-        errFiles['other'] += files_status['error']['other']
+        errFiles['exists'] += filesStatus['error']['exists']
+        errFiles['invalid_path'] += filesStatus['error']['invalid_path']
+        errFiles['other'] += filesStatus['error']['other']
 
-        allFilesStatus['success'] += files_status['success']
+        allFilesStatus['success'] += filesStatus['success']
 
     return allFilesStatus
 
 
-def move_files_from_dir(files, inputDir, outDir, copyFiles):
+def moveFilesFromDir(files, inputDir, outDir, copyFiles):
     filesStatus = {
         'error': {
             'exists': [],
@@ -35,13 +35,13 @@ def move_files_from_dir(files, inputDir, outDir, copyFiles):
     }
     errFiles = filesStatus['error']
 
-    move_or_copy = copy_file if copyFiles else move_file
+    moveOrCopy = copyFile if copyFiles else moveFile
 
     for fileRelativePath in files:
         currPath = f'{inputDir}/{fileRelativePath}'
         newPath = f'{outDir}/{fileRelativePath}'
 
-        err = move_or_copy(currPath, newPath)
+        err = moveOrCopy(currPath, newPath)
 
         if err is FileExistsError:
             errFiles['exists'].append(currPath)

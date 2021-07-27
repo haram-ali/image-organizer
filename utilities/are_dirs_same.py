@@ -8,16 +8,16 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from private_constants import INPUT_DIRS
-from files import get_all_files
+from files import getAllFiles
 
 
 filesByDir = []
-for input_dir in INPUT_DIRS:
-    filesByDir.append(get_all_files(input_dir, relativePath=True))
+for inputDir in INPUT_DIRS:
+    filesByDir.append(getAllFiles(inputDir, relativePath=True))
 
 allDirsAreSame = True
-for dir_files in filesByDir:
-    if dir_files != filesByDir[0]:
+for dirFiles in filesByDir:
+    if dirFiles != filesByDir[0]:
         allDirsAreSame = False
         break
 

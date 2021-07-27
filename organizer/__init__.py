@@ -3,9 +3,9 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from private_constants import INPUT_DIR, OUT_DIR
-from files import get_all_files
-from organize import organize_files
-from utilities import show_stats
+from files import getAllFiles
+from organize import organizeFiles
+from utilities import showStats
 
 
 ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.mp4']
@@ -15,7 +15,7 @@ KEEP_SUB_DIR_SUTRUCTURE_INSIDE_DATE_DIRS = True     # If true then the dir struc
 
 
 # Getting files
-files = get_all_files(
+files = getAllFiles(
     INPUT_DIR,
     relativePath=True,
     extensions=ALLOWED_EXTENSIONS
@@ -23,7 +23,7 @@ files = get_all_files(
 print(f'{len(files)} files found.')
 
 # Organizing files
-filesStatus = organize_files(
+filesStatus = organizeFiles(
     files,
     INPUT_DIR,
     OUT_DIR,
@@ -32,4 +32,4 @@ filesStatus = organize_files(
     keepSubDirSutructureInsideDateDirs=KEEP_SUB_DIR_SUTRUCTURE_INSIDE_DATE_DIRS
 )
 
-show_stats(filesStatus)
+showStats(filesStatus)

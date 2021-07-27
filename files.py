@@ -14,16 +14,16 @@ from shutil import copyfile
 """
 
 
-def get_dirs_in_curr_dir(path):
+def getDirsInCurrDir(path):
     return [f for f in listdir(path) if isdir(join_path(path, f))]
 
 
-def get_files_in_curr_dir(path, extensions=None):
-    all_files = [f for f in listdir(path) if isfile(join_path(path, f))]
+def getFilesInCurrDir(path, extensions=None):
+    allFiles = [f for f in listdir(path) if isfile(join_path(path, f))]
 
     if extensions:
-        return [f for f in all_files if get_file_extension(f) in extensions]
-    return all_files
+        return [f for f in allFiles if getFileExtension(f) in extensions]
+    return allFiles
 
 
 """
@@ -31,12 +31,12 @@ def get_files_in_curr_dir(path, extensions=None):
 """
 
 
-def move_file(fromPath, toPath):
+def moveFile(fromPath, toPath):
     try:
-        if chk_file(toPath):
+        if chkFile(toPath):
             raise FileExistsError
 
-        mk_dir(get_file_path(toPath))
+        mkDir(getFilePath(toPath))
         rename(fromPath, toPath)
     except FileExistsError:
         return FileExistsError
@@ -46,12 +46,12 @@ def move_file(fromPath, toPath):
         return Exception
 
 
-def copy_file(fromPath, toPath):
+def copyFile(fromPath, toPath):
     try:
-        if chk_file(toPath):
+        if chkFile(toPath):
             raise FileExistsError
 
-        mk_dir(get_file_path(toPath))
+        mkDir(getFilePath(toPath))
         copyfile(fromPath, toPath)
     except FileExistsError:
         return FileExistsError
@@ -66,13 +66,13 @@ def copy_file(fromPath, toPath):
 """
 
 
-def get_all_files(searchingDirPath, relativePath=False, extensions=None):
+def getAllFiles(searchingDirPath, relativePath=False, extensions=None):
     """
     Returns all the files in current directory & all subdirectories.
 
     Parameters:
     ----------
-    searching_dir_path (str):
+    searchingDirPath (str):
         Full path to directory
     relativePath (Boolean): optional
         If true the files path will not include path to searching directory
@@ -80,23 +80,23 @@ def get_all_files(searchingDirPath, relativePath=False, extensions=None):
         List of extensions to filter files.
     """
 
-    def get_all_files_inner(path, extensions):
+    def getAllFilesInner(path, extensions):
         files = []
         nonlocal searchingDirPath
 
-        for dir in get_dirs_in_curr_dir(path):
-            files += get_all_files_inner(f'{path}/{dir}', extensions)
+        for dir in getDirsInCurrDir(path):
+            files += getAllFilesInner(f'{path}/{dir}', extensions)
 
-        curr_dir_files = get_files_in_curr_dir(path, extensions)
-        files += put_relative_path_to_files(curr_dir_files,
+        currDirFiles = getFilesInCurrDir(path, extensions)
+        files += putRelativePathToFiles(currDirFiles,
                                             path, searchingDirPath)
         return files
 
-    files = get_all_files_inner(searchingDirPath, extensions)
+    files = getAllFilesInner(searchingDirPath, extensions)
     if relativePath:
         return files
 
-    return put_path_to_files(files, searchingDirPath)
+    return putPathToFiles(files, searchingDirPath)
 
 
 """
@@ -104,35 +104,35 @@ def get_all_files(searchingDirPath, relativePath=False, extensions=None):
 """
 
 
-def write_to_file(file, content):
+def writeToFile(file, content):
     with open(file, 'w') as file:
         file.write(content)
 
 
-def chk_file(path):
+def chkFile(path):
     return exists(path)
 
 
-def get_file_path(file):
+def getFilePath(file):
     return dirname(file)
 
 
-def get_file_name(file):
+def getFileName(file):
     return filename(file)
 
 
-def get_file_extension(file):
+def getFileExtension(file):
     return splitext(file)[1]
 
 
-def mk_dir(path):
+def mkDir(path):
     if not path_exists(path):
         makedirs(path)
 
 
-def put_path_to_files(files, path):
+def putPathToFiles(files, path):
     return [f'{path}/{f}' for f in files]
 
 
-def put_relative_path_to_files(files, path, pathToDir):
+def putRelativePathToFiles(files, path, pathToDir):
     return [f'{path.replace(pathToDir, "")}/{file}' for file in files]
