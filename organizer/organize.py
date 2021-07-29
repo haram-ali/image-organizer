@@ -15,6 +15,7 @@ def organizeFiles(
         'error': {
             'exists': [],
             'invalidPath': [],
+            'fileNameInvalid': [],
             'other': []
         },
         'success': []
@@ -24,9 +25,14 @@ def organizeFiles(
     moveOrCopy = copyFile if copyFiles else moveFile
 
     for fileRelativePath in filesRelativePath:
-        fileDate = getFileDate(fileRelativePath, useFileNameToOrganize)
-
         fileCurrPath = f'{inputDir}/{fileRelativePath}'
+
+        try:
+            fileDate = getFileDate(fileRelativePath, useFileNameToOrganize)
+        except:
+            errFiles['fileNameInvalid'].append(fileCurrPath)
+            continue
+
         fileNewPath = getFileNewPath(fileDate, fileRelativePath, outDir, keepSubDirSutructureInsideDateDirs)
 
         err = moveOrCopy(fileCurrPath, fileNewPath)
