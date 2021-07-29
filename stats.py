@@ -9,10 +9,11 @@ def showStats(filesStatus):
 
     errExisting = errFiles['exists']
     errInvalidPath = errFiles['invalidPath']
+    errfileNameInvalid = errFiles.get('fileNameInvalid', [])
     errOthers = errFiles['other']
 
     totalSuccessFiles = len(filesStatus['success'])
-    totalErrFiles = len(errExisting) + len(errInvalidPath) + len(errOthers)
+    totalErrFiles = len(errExisting) + len(errInvalidPath) + len(errfileNameInvalid) + len(errOthers)
 
     if totalErrFiles == 0:
         print('All files files copied/moved successfully.')
@@ -25,11 +26,12 @@ Successfully copied/moved files : {totalSuccessFiles}
 
 Files with error.
 
-    Existing files : {len(errExisting)}
-    Invalid path   : {len(errInvalidPath)}
-    Other errors   : {len(errOthers)}
+    Existing files    : {len(errExisting)}
+    Invalid path      : {len(errInvalidPath)}
+    File name invalid : {len(errfileNameInvalid)}
+    Other errors      : {len(errOthers)}
     ----------------------
-    Total          : {totalErrFiles}
+    Total             : {totalErrFiles}
 
 Additional information is stored to {logFilePath}
 """
